@@ -1,0 +1,55 @@
+
+version: '3'
+
+tasks:
+
+  # abstract task to run terraform tasks
+  # this is just to see how taskfile handles these kind of tasks
+  # default vars like TF_FILE are also overrideable via vars: TF_FILE: ... in tasks
+  tf:
+    label: 'tf-{{.ACTION}}'
+    prefix: 'tf-{{.ACTION}}'
+    dir: '{{.TF_DIR}}'
+    desc: |
+          Runs a terraform command in given folder (defaults to '{{.TF_DIR}}')
+          
+          input vars: 
+          ACTION: tf actions, init, plan, apply, destroy ...
+          TF_DIR: directory to call tf commands where  terraform code (e.g. main.tf) is located
+
+    cmds:
+      - echo "Running terraform '{{.ACTION}}' in directory '{{.TF_DIR}}'"
+      - terraform {{.ACTION}} {{.EXTRA_VARS}}
+      - '{{.EXTRA_CMDS}}'
+
+  init:
+    - task: tf
+      desc: initialize terraform folder
+      vars:
+        ACTION: init      
+  
+  plan:
+    - task: tf
+      desc: plan terraform
+      vars:
+        ACTION: plan
+        EXTRA_VARS: -out .plan -var-file {{.TF_FILE}} {{.CLI_ARGS}}
+
+
+  apply:
+    - task: tf
+      desc: Apply terraform plan '.plan'
+      vars:
+        ACTION: apply
+        EXTRA_VARS: .plan {{.CLI_ARGS}}
+      preconditions:
+        - test -f .plan
+
+  destroy:
+    - task: tf
+      desc: |
+            Destroy terraform, User Input needed here, 
+            or run "./bin/task tf:destroy -- -auto-approve" !
+      vars:
+        ACTION: destroy
+        EXTRA_VARS: ' -var-file {{.TF_FILE}} {{.CLI_ARGS}}'

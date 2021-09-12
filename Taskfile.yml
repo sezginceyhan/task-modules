@@ -1,0 +1,20 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  TASK_MODULES_DIR: '.'
+
+includes:
+  echo: ./{{.TASK_MODULES_DIR}}/echo
+  tf: ./{{.TASK_MODULES_DIR}}/terraform
+  az: ./{{.TASK_MODULES_DIR}}/azurecli
+
+
+tasks:
+  
+  tf-plan:
+    - task: tf:plan
+  
+  condstates:
+    - task: echo:conditional-statements

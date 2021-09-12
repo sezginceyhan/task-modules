@@ -1,0 +1,36 @@
+# https://taskfile.dev
+
+version: '3'
+
+# This module handles azure cli tasks
+
+
+tasks:
+ 
+  login:
+    desc: |
+        Login to azure tenant {{.TENANT}} in given {{.CLOUD}}
+        
+        input vars: 
+          TENANT: Name or ID of tenant
+          CLOUD: AzureCloud, AzureChinaCloud see 'az cloud list --output table'
+    label: "login-{{.TENANT}}"
+    prefix: azLogin
+    cmds:
+      - echo "Switching AzureCLI to Tenant {{.TENANT}} in Cloud {{.CLOUD}}"
+      - az cloud set --name '{{.CLOUD}}'
+      - az login --tenant '{{.TENANT}}'
+    status:
+      - az account show --query environmentName
+      - az cloud list --query "[?name=='{{.CLOUD}}'].isActive" -o tsv
+
+  setSubscription:
+    desc: |
+        Switch cli to given azure subscription 
+
+        input vars: 
+          SUBSCRIPTION: Name or ID of subscription
+    label: "setSubscription-{{.SUBSCRIPTION}}"
+    cmds:
+      - echo "Switching AzureCLI to subscription {{.SUBSCRIPTION}}"
+      - az account set --subscription {{.SUBSCRIPTION}}

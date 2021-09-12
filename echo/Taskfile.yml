@@ -1,0 +1,34 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+
+tasks:
+  default:
+    cmds:
+      - echo "{{.GREETING}}"
+  echo:
+    cmds:
+      - echo "{{.GREETING}}"
+  
+  do:
+    - task: nested
+
+  nested:
+    - task: hello
+
+
+  hello:
+    cmds:
+    - echo "HELLO"
+
+  labeled:
+    label: labled:{{.GREETING}}
+    cmds:
+      - echo "{{.GREETING}}"
+
+  conditional-statements:
+    cmds:
+      - echo '{{if not "{{.MY_UNSET_VAR}}"}}MY_UNSET_VAR not set {{else}}found MY_UNSET_VAR '{{.MY_UNSET_VAR}}' {{end}}''
