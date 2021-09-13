@@ -2,13 +2,10 @@
 
 version: '3'
 
-vars:
-  TASK_MODULES_DIR: '.'
-
 includes:
-  echo: ./{{.TASK_MODULES_DIR}}/echo
-  tf: ./{{.TASK_MODULES_DIR}}/terraform
-  az: ./{{.TASK_MODULES_DIR}}/azurecli
+  echo: tasks/echo
+  tf: tasks/terraform
+  az: tasks/azurecli
 
 
 tasks:

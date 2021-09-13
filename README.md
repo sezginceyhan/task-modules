@@ -12,6 +12,18 @@ Shared Tasks can be included using [include](https://taskfile.dev/#/usage?id=inc
 This repository needs to be cloned before usage as the taskfiles need to be local there.
 
 ```bash
-git clone git@github.com:thisTRepo tasks
 git clone https://github.com/sezginceyhan/task-modules.git tasks
+```
+
+## Using libs
+
+Add the following includes into your Taskfile.yml
+
+```yaml
+version: '3'
+
+includes:
+  echo: tasks/echo
+  tf: tasks/terraform
+  az: tasks/azurecli
 ```
