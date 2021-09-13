@@ -13,9 +13,9 @@ tasks:
     desc: |
           Runs a terraform command in given folder (defaults to '{{.TF_DIR}}')
           
-          input vars: 
-          ACTION: tf actions, init, plan, apply, destroy ...
-          TF_DIR: directory to call tf commands where  terraform code (e.g. main.tf) is located
+            input vars: 
+              ACTION: tf actions, init, plan, apply, destroy ...
+              TF_DIR: directory to call tf commands where  terraform code (e.g. main.tf) is located
 
     cmds:
       - echo "Running terraform '{{.ACTION}}' in directory '{{.TF_DIR}}'"

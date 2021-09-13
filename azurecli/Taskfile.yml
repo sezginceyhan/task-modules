@@ -9,28 +9,40 @@ tasks:
  
   login:
     desc: |
-        Login to azure tenant {{.TENANT}} in given {{.CLOUD}}
+        Login to azure tenant {{.TENANT}} 
         
-        input vars: 
-          TENANT: Name or ID of tenant
-          CLOUD: AzureCloud, AzureChinaCloud see 'az cloud list --output table'
+          input vars: 
+            TENANT: Name or ID of tenant
+            
     label: "login-{{.TENANT}}"
-    prefix: azLogin
     cmds:
-      - echo "Switching AzureCLI to Tenant {{.TENANT}} in Cloud {{.CLOUD}}"
-      - az cloud set --name '{{.CLOUD}}'
+      - echo "Switching AzureCLI to Tenant {{.TENANT}}"
       - az login --tenant '{{.TENANT}}'
+
+  set-cloud:
+    desc: |
+        Switch cli to given azure cloud  
+
+          input vars: 
+            CLOUD: AzureCloud, AzureChinaCloud see 'az cloud list --output table'
+    cmds:
+      - echo "Switching AzureCLI to Cloud '{{.CLOUD}}'"
+      - az cloud set --name '{{.CLOUD}}'
     status:
-      - az account show --query environmentName
+      - "[ $(az account show --query environmentName -o tsv) == {{.CLOUD}} ]"
       - az cloud list --query "[?name=='{{.CLOUD}}'].isActive" -o tsv
 
-  setSubscription:
+
+  set-subscription:
     desc: |
         Switch cli to given azure subscription 
 
-        input vars: 
-          SUBSCRIPTION: Name or ID of subscription
-    label: "setSubscription-{{.SUBSCRIPTION}}"
+          input vars: 
+            SUBSCRIPTION: Name or ID of subscription
+    label: "set-subscription-{{.SUBSCRIPTION}}"
     cmds:
       - echo "Switching AzureCLI to subscription {{.SUBSCRIPTION}}"
       - az account set --subscription {{.SUBSCRIPTION}}
+    status:
+      - "[ $(az account show --query name -o tsv) == {{.SUBSCRIPTION}} ]"
+      
